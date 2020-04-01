@@ -1,0 +1,44 @@
+``<!-- <html> -->
+{% extends 'photoupload/base.html' %}
+{% load staticfiles %}
+
+{% block headAndStyle %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="{% static 'timeline/style.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<head>
+<meta charset="UTF-8">
+{% endblock %}
+
+{% block header %}
+</head>
+<body>
+{% endblock %}
+
+{% block content %}
+<div class="inspect-container">
+
+  <img class="inspectPhoto" src="{{ MEDIA_URL }}{{ image.image }}" style="width:500px;height:500px;margin-left:50px;margin-bottom:100px;float:left">
+
+  <form style='float:left;margin-left:50px' method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Submit"/>
+  </form>
+
+</div>
+
+
+</body>
+<script>
+$(function() {
+  $('#id_memories').addClass('form-control');
+  $('#id_tags').addClass('form-control');
+  $('#id_caption').addClass('form-control');
+  $('form input[type="submit"]').addClass('btn btn-outline-success')
+  $('form p').attr('margin-bottom:10px');
+})
+
+ 'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
+{% endblock %}

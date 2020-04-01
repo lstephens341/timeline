@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+<html>
+
+{% block headAndStyle %}
+{% endblock %}
+
+<body>
+
+<div class="pageheader">
+
+	{% block header %}
+	{% endblock %}
+
+</div>
+<nav id="timelineNavbar" class="navbar navbar-default">
+  <div class="container-fluid">
+    <ul class="nav navbar-nav">
+      <li id="Upload"><a href="{% url 'FileFieldView' %}">Upload</a>
+      </li>
+      <li id="Explore"><a href="{% url 'photoupload' %}">Explore</a>
+      </li>
+    </ul>
+	<ul class="nav navbar-nav navbar-right">
+		<li><a href="{% url 'login' %}">[Log out]</a></li>
+	</ul>
+  </div>
+</nav>
+
+	{% block content %}
+	{% endblock %}
+
+</body>
+<!-- <script src="{% static 'master/master.js' %}"></script> -->
+</html>
