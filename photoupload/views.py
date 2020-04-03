@@ -4,7 +4,7 @@ from .models import Image
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
-@login_required
+
 def explore(request):
     if request.method == 'GET':
         images = Image.objects.all().exclude(yearField='').exclude(yearField='year')
@@ -16,7 +16,7 @@ class FileFieldView(FormView):
     template_name = 'photoupload/upload.html'  # Replace with your template.
     success_url = 'photoupload/photo_upload.html'  # Replace with your URL or reverse().
 
-    @login_required
+    
     def post(self, request, *args, **kwargs):
         # images = Image.objects.all()
         form_class = self.get_form_class()
