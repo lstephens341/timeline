@@ -1,0 +1,377 @@
+<!-- <html> -->
+{% extends 'photoupload/base.html' %}
+
+{% block headAndStyle %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<head>
+
+
+{% endblock %}
+
+{% block header %}
+<!-- <meta charset="utf-8" />
+<title>Add a geocoder</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+<script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+<link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+<style>
+	body { margin: 0; padding: 0; }
+	#map { position: absolute; top: 75px; bottom: 0; width: 100%; }
+</style>
+</head>
+<body> -->
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Reverse Geocoding</title>
+    <style>
+      /* Always set the map height explicitly to define the size of the div
+       * element that contains the map. */
+      #map {
+        height: 80%;
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+      #pac-input {
+        margin-left: 30%;
+        margin-top: -60px;
+        position: absolute;
+        width: 40%;
+      }
+      /* Optional: Makes the sample page fill the window. */
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 10px;
+        left: 25%;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+        text-align: center;
+        font-family: 'Roboto','sans-serif';
+        line-height: 30px;
+        padding-left: 10px;
+      }
+      #floating-panel {
+        position: absolute;
+        top: 5px;
+        left: 50%;
+        margin-left: -180px;
+        width: 350px;
+        z-index: 5;
+        background-color: #fff;
+        padding: 5px;
+        border: 1px solid #999;
+      }
+      #latlng {
+        width: 225px;
+      }
+      #map-container {
+        float: left;
+        width: 99%;
+        height: 100%;
+        position: sticky;
+      }
+      #panel-body {
+        display: none;
+        float: left;
+        width: 1%;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+
+{% endblock %}
+
+{% block content %}
+
+<!-- <div id="floating-panel">
+      <input id="latlng" type="text" value="40.714224,-73.961452">
+      <input id="submit" type="button" value="Reverse Geocode">
+    </div> -->
+		<input id="pac-input" class="controls" type="text" placeholder="Search Box">
+
+    <div id="map-container">
+      <div id="map">
+      </div>
+    </div>
+
+    {% for image in images %}
+        {% if forloop.first %}
+        <div id="panel-body">
+        <h2 id='locationDetailHeader' style='text-align:center'> <span id='locationHeaderText'> Placeholder </span> <span class='close'>x</span></h2>
+        {% endif %}
+          <div class="imageContainer{{image.yearField}}" value='{{image.location}}' style="float:left;width:25%;margin:auto">
+            <a href="{% url 'inspect' forloop.counter %}">
+              <img class="timelinePhoto" src='{{ MEDIA_URL }}{{ image.image }}' value='{{image.tags}} {{image.location}}' style="width:250px;height:250px;margin-left:35px;margin-bottom:100px">
+            </a>
+          </div>
+        {% if forloop.last %}
+        </div>
+        {% endif %}
+    {% endfor %}
+
+    <script>
+      function initMap() {
+        // var map = new google.maps.Map(document.getElementById('map'), {
+        //   zoom: 8,
+        //   center: {lat: 40.731, lng: -73.997}
+        // });
+        // var geocoder = new google.maps.Geocoder;
+
+				var myLatlng = new google.maps.LatLng(41.38, 2.18);
+				var myOptions = {
+				  zoom: 13,
+				  center: myLatlng
+				}
+				var map = new google.maps.Map(document.getElementById("map"), myOptions);
+				var geocoder = new google.maps.Geocoder();
+        var address = 'Investors Bank Field Summit High School Football, 38 Butler Pkwy #14, Summit, NJ 07901, USA'
+				// var infowindow = new google.maps.InfoWindow;
+
+				var input = document.getElementById('pac-input');
+        var searchBox = new google.maps.places.SearchBox(input);
+        // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+				map.addListener('bounds_changed', function() {
+          searchBox.setBounds(map.getBounds());
+        });
+
+				var markers = [];
+        // Listen for the event fired when the user selects a prediction and retrieve
+        // more details for that place.
+        searchBox.addListener('places_changed', function() {
+          var places = searchBox.getPlaces();
+
+          if (places.length == 0) {
+            return;
+          }
+
+          // Clear out the old markers.
+          markers.forEach(function(marker) {
+            marker.setMap(null);
+          });
+          markers = [];
+
+          // For each place, get the icon, name and location.
+          var bounds = new google.maps.LatLngBounds();
+          places.forEach(function(place) {
+            if (!place.geometry) {
+              console.log("Returned place contains no geometry");
+              return;
+            }
+            var icon = {
+              url: place.icon,
+              size: new google.maps.Size(71, 71),
+              origin: new google.maps.Point(0, 0),
+              anchor: new google.maps.Point(17, 34),
+              scaledSize: new google.maps.Size(25, 25)
+            };
+
+            // Create a marker for each place.
+            markers.push(new google.maps.Marker({
+              map: map,
+              icon: icon,
+              title: place.name,
+              position: place.geometry.location
+            }));
+
+            if (place.geometry.viewport) {
+              // Only geocodes have viewport.
+              bounds.union(place.geometry.viewport);
+            } else {
+              bounds.extend(place.geometry.location);
+            }
+          });
+          map.fitBounds(bounds);
+        });
+
+        function adjustHeight() {
+          document.getElementById('map').style.height = '300px';
+        }
+
+        function revealCorrespondingPhotos(address) {
+          var counter = 0;
+          $('.timelinePhoto').each(function(photoString, className) {
+            photoString = $(this).attr('value');
+            // console.log(photoString);
+            if(photoString.indexOf(address) == -1) {
+              $(this).parent().parent().hide();
+            }
+            else {
+              $(this).parent().parent().show();
+              className = 'columnCounter' + counter
+              $(this).addClass(className);
+              if(counter === 3) {
+                counter = 0;
+              }
+              else {
+                counter = counter + 1;
+              }
+            }
+          });
+        }
+
+        var globalLocationArray = [];
+
+        function locationArray(globalLocationArray) {
+          var locationArray = [];
+          $("[class^='imageContainer']").each(function(photoLocation) {
+              photoLocation = $(this).attr('value')
+              locationArray.push(photoLocation);
+              globalLocationArray.push(photoLocation)
+          });
+        }
+
+        locationArray(globalLocationArray);
+
+
+
+
+				google.maps.event.addListener(map, 'click', function(event) {
+				  geocoder.geocode({
+				    'latLng': event.latLng
+				  }, function(results, status) {
+				    if (status == google.maps.GeocoderStatus.OK) {
+				      if (results[0]) {
+                adjustHeight();
+                $('.panel-body').show();
+                revealCorrespondingPhotos(results[0].formatted_address);
+				      }
+				    }
+				  });
+				});
+
+
+
+        $('.yearBreak').hide();
+
+        geocodeAddress(geocoder, map, globalLocationArray);
+
+
+
+        // $('#map').on('click', function() {
+        //   $(this).height('300px');
+        // })
+
+
+        // document.getElementById('submit').addEventListener('click', function() {
+        //   geocodeLatLng(geocoder, map, infowindow);
+        // });
+      }
+
+      function geocodeAddress(geocoder, resultsMap, globalLocationArray) {
+        var filteredArray = globalLocationArray.filter(Boolean);
+        for(var i = 0; i < filteredArray.length; i++) {
+          var currAddress = filteredArray[i];
+          geocoder.geocode({
+            'address': currAddress
+          }, function(results, status) {
+            if (status === google.maps.GeocoderStatus.OK) {
+              // resultsMap.setCenter(results[0].geometry.location);
+              marker = new google.maps.Marker({
+                map: resultsMap,
+                position: results[0].geometry.location,
+                title: results[0].formatted_address
+              });
+
+              var infowindow = new google.maps.InfoWindow({
+                content: 'Hello'
+              });
+
+              // marker.addListener('click', function() {
+              //   // resultsMap.setZoom(8);
+              //   // resultsMap.setCenter(marker.getPosition());
+              //   // console.log(marker.getPosition());
+              //   infowindow.open(resultsMap, marker);
+              //   console.log(marker.getTitle());
+              // });
+
+              function adjustWidth() {
+                document.getElementById('map-container').style.width = '33%';
+                document.getElementById('panel-body').style.width = '66%';
+              }
+
+              function revealCorrespondingPhotos(address) {
+                var counter = 0;
+                $('.timelinePhoto').each(function(photoString, className) {
+                  photoString = $(this).attr('value');
+                  // console.log(photoString);
+                  if(photoString.indexOf(address) == -1) {
+                    $(this).parent().parent().hide();
+                  }
+                  else {
+                    $(this).parent().parent().show();
+                    className = 'columnCounter' + counter
+                    $(this).addClass(className);
+                    if(counter === 3) {
+                      counter = 0;
+                    }
+                    else {
+                      counter = counter + 1;
+                    }
+                  }
+                });
+              }
+
+              google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                  infowindow.open(resultsMap, marker);
+                  adjustWidth();
+                  $('#panel-body').show();
+                  $('#locationHeaderText').html(marker.getTitle());
+                  revealCorrespondingPhotos(marker.getTitle());
+                }
+              })(marker, i));
+
+            } else {
+              alert('Geocode was not successful for the following reason: ' + status);
+            }
+          });
+        }
+      }
+
+      $('#pac-input').addClass('form-control');
+
+      $('.close').on('click', function() {
+        $('#map-container').attr('style', 'width:99%');
+        $('#panel-body').attr('style', 'width:1%');
+        $('#panel-body').hide();
+      })
+
+      // function geocodeLatLng(geocoder, map, infowindow) {
+      //   var input = document.getElementById('latlng').value;
+      //   var latlngStr = input.split(',', 2);
+      //   var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+      //   geocoder.geocode({'location': latlng}, function(results, status) {
+      //     if (status === 'OK') {
+      //       if (results[0]) {
+      //         map.setZoom(11);
+      //         var marker = new google.maps.Marker({
+      //           position: latlng,
+      //           map: map
+      //         });
+      //         infowindow.setContent(results[0].formatted_address);
+      //         infowindow.open(map, marker);
+      //       } else {
+      //         window.alert('No results found');
+      //       }
+      //     } else {
+      //       window.alert('Geocoder failed due to: ' + status);
+      //     }
+      //   });
+      // }
+
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7bsO1SEsaah1CpreakpfWyd0PCwd0P-g&libraries=places&callback=initMap">
+    </script>
+{% endblock %}

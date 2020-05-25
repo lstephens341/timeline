@@ -11,6 +11,7 @@ class Image(models.Model):
     caption = models.CharField(max_length=200, default='')
     memories = models.TextField(blank = True)
     tags = models.CharField(max_length=200, default='')
+    location = models.CharField(max_length=200, default='')
 
 
     class Meta:

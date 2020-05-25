@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <link rel="stylesheet" href="/resources/demos/style.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-<link rel="stylesheet" href="{% static 'timeline/style.css' %}">
+<link rel="stylesheet" href="{% static 'style.css' %}">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -27,88 +27,95 @@
   } );
   $(function() {
     $('#slider-range').mouseup(function() {
-      // console.log($('#slider-range').slider("values"));
       $('.yearField').each(function(string) {
         string = parseInt($(this).html().replace('<span class="caret" style="transform:rotate(-180deg)"></span>', ''));
-        // console.log(string);
-        // console.log($('#slider-range').slider('values')[0]);
-        if(string >= $('#slider-range').slider('values')[0] && string <= $('#slider-range').slider('values')[1]) {
+          if(string >= $('#slider-range').slider('values')[0] && string <= $('#slider-range').slider('values')[1]) {
           $(this).parent().show();
           console.log(string + 'inside range');
         }
         else {
           $(this).parent().hide();
-          // console.log($(this).parent().html());
         }
-        // console.log($(this).html());
       });
     });
   });
 
-  // $(document).ready(function() {
-  //   prev = ''
-  //   appendHTML = '</div>'
-  //   $('.yearField').each(function(counter) {
-  //           if($(this).html() === prev) {
-  //             // console.log($(this).html() + ' ' + counter + ' ' + 'same');
-  //             $(this).hide();
-  //           }
-  //           else {
-  //             // console.log(prev);
-  //             // console.log($(this).html() + ' ' + counter + ' ' + 'new');
-  //             counter = 0;
-  //             $(this).append(appendHTML);
-  //           }
-  //           prev = $(this).html();
-  //           counter++;
-  //           if(counter > 3) {
-  //             counter = counter - 3;
-  //           }
-  //           $(this).next().addClass('col' + counter)
-  //   });
-  // });
   </script>
-<head>
-<meta charset="UTF-8">
-<!-- <title>Upload Images</title> -->
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.9.1/mapbox-gl.css" rel="stylesheet" />
+  <style>
+  	body { margin: 0; padding: 0; }
+  	#map { position: absolute; top: 0; bottom: 0; width: 100%; }
+
+    .tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+  .tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -60px;
+  }
+
+  .tooltip .tooltiptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+
+  .imageContainer1965:hover .tooltiptext {
+    visibility: visible;
+  }
+  </style>
 </head>
+<body>
 {% endblock %}
 
 {% block header %}
 
 {% endblock %}
 
-<!-- <html> -->
+
 {% block content %}
-<body>
-
-<!-- <h1>Image Uploader</h1>
-<form enctype="multipart/form-data" method="POST" action="">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Upload"/>
-</form> -->
 
 
 
-
-<div id='filterTray' style='border-radius:20px;margin-left:10px;margin-right:10px'>
+<div id='filterTray' style='border-radius:20px;margin-left:20px;margin-right:10px'>
   <div>
-    <img id="filterHeader" src="{% static 'timeline/Filter-2-icon.PNG' %}" style='height:35px;width:35px;margin-left:5px'><span class="caret" style="transform:rotate(-180deg)"></span>
+    <img id="filterHeader" src="{% static 'Filter-2-icon.PNG' %}" style='height:20px;width:20px;margin-left:5px;cursor:pointer'><span class="caret" style="transform:rotate(-180deg)"></span>
   </div>
-  <div id='filterContainer' style="height:125px;display:none">
-    <div style='float:left;margin-left:15px;width:50%'>
+  <div id='filterContainer' style="height:80px;display:none">
+    <div style='float:left;margin-left:15px;width:35%'>
       <p>
         <label for="amount">Years:</label>
         <input type="text" id="amount" readonly style="border:0; color:#f6931f; font-weight:bold;">
       </p>
       <div id="slider-range" style='height:32px'></div>
     </div>
-    <div style='float:left;width:45%;margin-left:35px;margin-top:35px'>
+    <div style='float:left;width:60%;margin-left:35px;margin-top:35px'>
       <div>
-        <input type='text' id='firstTagSearch' class='form-control' placeholder='Filter by tags' style='width:300px;float:left'>
+        <input type='text' id='firstTagSearch' class='form-control' placeholder='Filter by tags' style='width:200px;float:left'>
+        <input id='locationSearch' style="float:left; margin-left:20px;width:40%"></input>
         <input type='submit' id='filterSubmit' class='btn btn-outline-dark' value='Apply Filters' style=' margin-left:10px;float:right'>
-      </div>
     </div>
   </div>
 </div>
@@ -125,9 +132,12 @@
     <div class="panel-body">
       {% endifchanged %}
       <div class="imageContainer{{image.yearField}}" style="float:left;width:25%;margin:auto">
-        <a href="{% url 'inspect' forloop.counter %}">
-          <img class="timelinePhoto" src='{{ MEDIA_URL }}{{ image.image }}' value='{{image.tags}}' style="width:250px;height:250px;margin-left:35px;margin-bottom:100px">
-        </a>
+          <a href="{% url 'inspect' forloop.counter %}">
+            <img class="timelinePhoto" src='{{ MEDIA_URL }}{{ image.image }}' value='{{image.tags}} {{image.location}}' style="width:250px;height:250px;margin-left:35px;margin-bottom:100px">
+          </a>
+          <div class='tooltip'>
+            <span class='tooltiptext'> Tooltip Text </span>
+          </div>
       </div>
       {% if forloop.last %}
   </div>
@@ -155,6 +165,12 @@
 
 </body>
 <script>
+function init() {
+	var input = document.getElementById('locationSearch');
+	var autocomplete = new google.maps.places.Autocomplete(input);
+}
+$('#locationSearch').addClass('form-control');
+
 
 $(function() {
   $('.yearField').click(function() {
@@ -166,12 +182,21 @@ $(function() {
 $(function() {
   $('#filterHeader').click(function() {
       $('#filterContainer').toggle();
-      $('#filterTray').style('border: solid black')
+      // $('#filterTray').attr('style', 'border: solid black');
+      if($('.caret').css('transform') === 'matrix(-1, -1.22465e-16, 1.22465e-16, -1, 0, 0)') {
+        $('.caret').attr('style', 'transform: rotate(-360deg)');
+      }
+      else {
+        $('.caret').attr('style', 'transform: rotate(-180deg)');
+      }
+
   });
 });
+
 $(function () {
   $('#filterSubmit').on('click', function(inputString) {
     inputString = $('#firstTagSearch').val();
+    inputString += $('#locationSearch').val();
     $('.timelinePhoto').each(function(photoString) {
       photoString = $(this).attr('value');
       // console.log(photoString);
@@ -184,8 +209,8 @@ $(function () {
     });
   });
 });
-
-
- 'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
-
+</script>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7bsO1SEsaah1CpreakpfWyd0PCwd0P-g&libraries=places&callback=init">
+</script>
 {% endblock %}

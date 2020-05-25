@@ -11,4 +11,4 @@ True}))
 class ImageInspect(ModelForm):
     class Meta:
         model = Image
-        fields = ['caption', 'memories', 'tags']
+        fields = ['caption', 'memories', 'tags', 'location']

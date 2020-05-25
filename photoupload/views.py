@@ -5,10 +5,22 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
 
+def map(request):
+    # TODO: move this token to Django settings from an environment variable
+    # found in the Mapbox account settings and getting started instructions
+    # see https://www.mapbox.com/account/ under the "Access tokens" section
+    mapbox_access_token = 'pk.eyJ1IjoibHN0ZXBoZW5zMzQxIiwiYSI6ImNrOTIwYXgxaDAzZmUzdW1wbHk2a3V5bDkifQ.ZzlWZXnn9kpDBPAcbqaWRQ'
+    images = Image.objects.all().exclude(yearField='').exclude(yearField='year')
+    if images is not None:
+        images0 = images[0]
+    return render(request, 'photoupload/map.html',
+                  { 'mapbox_access_token': mapbox_access_token, 'images': images, 'images0': images0 })
+
 def explore(request):
     if request.method == 'GET':
         images = Image.objects.all().exclude(yearField='').exclude(yearField='year')
-        images0 = images[0]
+        if images is not None:
+            images0 = images[0]
         return render(request, 'photoupload/photo_upload.html', {'images': images, 'images0' : images0})
 
 class FileFieldView(FormView):
@@ -16,7 +28,7 @@ class FileFieldView(FormView):
     template_name = 'photoupload/upload.html'  # Replace with your template.
     success_url = 'photoupload/photo_upload.html'  # Replace with your URL or reverse().
 
-    
+
     def post(self, request, *args, **kwargs):
         # images = Image.objects.all()
         form_class = self.get_form_class()
@@ -45,7 +57,7 @@ def inspect(request, key):
         key_int = int(key)
         key_int_corrected = key_int - 1
         image = images[key_int_corrected]
-        form = ImageInspect(initial={'caption': image.caption, 'memories': image.memories, 'tags':image.tags})
+        form = ImageInspect(initial={'caption': image.caption, 'memories': image.memories, 'tags':image.tags, 'location':image.location})
         return render(request, 'photoupload/inspect.html', {'image': image, 'form': form})
     if request.method == 'POST':
         images = Image.objects.all().exclude(yearField='').exclude(yearField='year')

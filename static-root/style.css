@@ -23,10 +23,9 @@
 }
 
 .year-container {
-	margin-left: 25px;
-	margin-right: 25px;
-	margin-top: 5px;
-  width: 1354px
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-top: 10px;
 }
 
 .yearField {
@@ -48,8 +47,4 @@
 
 input#amount {
 	color: #315FB7
-}
-
-.hover-color {
-  background-color: #C0C0C0;
 }

@@ -9,3 +9,42 @@
 .col3 {
   width: 33.33%;
 }
+
+.col4 {
+  width: 33.33%;
+}
+
+#timelineNavbar {
+  margin-bottom: 10px;
+}
+
+#filterHeader {
+  margin-bottom: 5px;
+}
+
+.year-container {
+	margin-left: 50px;
+	margin-right: 50px;
+	margin-top: 20px;
+}
+
+.yearField {
+	text-align: center;
+	font-size: 18px;
+}
+
+.panel-body {
+	padding-top: 30px;
+}
+
+.timelinePhoto, .inspectPhoto {
+	box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.inspect-container {
+	padding-top: 20px;
+}
+
+input#amount {
+	color: #315FB7
+}

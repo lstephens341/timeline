@@ -16,15 +16,43 @@
 {% endblock %}
 
 {% block content %}
-<h1>Image Uploader</h1>
-<form enctype="multipart/form-data" method="POST" action="">
-{% csrf_token %}
-{{ form.as_p }}
-<input type="submit" value="Upload"/>
-</form>
+<div class='card-container' style='box-shadow:0px 0px 5px 2px rgba(0,0,0,0.2);margin-left:200px;margin-right:200px'>
+  <h1 style='margin-left:38%;margin-top:35px;padding-top:15px'>Upload Images</h1>
+    <form style='height:150px' id="upload_submit" enctype="multipart/form-data" method="POST" action="">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input id='submitButton' class='btn btn-outline-success' style='display:block;margin:auto;margin-top:20px' type="submit" value="Upload"/>
+    </form>
+</div>
 
 </body>
 <script>
+
+$('#id_year').addClass('form-control').attr('style', 'width:150px;display:inline;').attr('placeholder', 'Form: yyyy');
+$('label[for="id_file_field"]').attr('style', 'display:none');
+$('p').attr('style', 'margin: 20px 40% 10px');
+
+$('#submitButton').hover(function(){
+    $(this).css("background-color", "#DCDCDC");
+    }, function(){
+    $(this).css("background-color", "buttonface");
+});
+
+$(function() {
+  $("#upload_submit").submit(function( event ){
+    if ( $('#id_year').val().length === 4) {
+      if( confirm("Are you sure you want to upload all selected photos with the Year value entered?")) {
+        return;
+      }
+    }
+    else {
+    alert("Error: Please enter a Year value with 4 numbers (form: yyyy)")
+    event.preventDefault();
+    }
+  });
+});
+
+// $('#id_file_field').addClass('btn btn-primary btn-sm waves-effect waves-light');
 
 
  'undefined'=== typeof _trfq || (window._trfq = []);'undefined'=== typeof _trfd && (window._trfd=[]),_trfd.push({'tccl.baseHost':'secureserver.net'}),_trfd.push({'ap':'cpsh'},{'server':'p3plcpnl0769'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script><script src='https://img1.wsimg.com/tcc/tcc_l.combined.1.0.6.min.js'></script></html>
