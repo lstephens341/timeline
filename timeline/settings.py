@@ -141,5 +141,3 @@ try:
     from .local_settings import *
 except ImportError:
     pass
-
-# G_API_KEY = 'AIzaSyASgWix5Zf5fx8nSMJL2qbR4_BOiFlN21w'
