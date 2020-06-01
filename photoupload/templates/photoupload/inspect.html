@@ -177,8 +177,7 @@ function geocodeLocation(geocoder, resultsMap) {
 }
 
 $('#pac-input').addClass('form-control');
-
-$('#pac-input').on('keyup', function() {
+$('#pac-input').on('keyup', function(currentLocation) {
 	currentLocation = $('#pac-input').val();
 	$('#id_location').val(currentLocation);
 });
@@ -189,15 +188,8 @@ $('#submitButton').hover(function(){
     $(this).css("background-color", "buttonface");
 });
 
-// var images = {{images}}
-
-// $('#pac-input').on('input', function() {
-// 	currentLocation = $('#pac-input').val();
-// 	$('#id_location').val(currentLocation);
-// })
-
 </script>
 <script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7bsO1SEsaah1CpreakpfWyd0PCwd0P-g&libraries=places&callback=initMap">
+src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=initMap">
 </script>
 {% endblock %}

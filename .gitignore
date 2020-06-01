@@ -4,5 +4,6 @@
 __pycache__
 my_django_environment
 db.sqlite3
+local_settings.py
 /static
 .DS_Store

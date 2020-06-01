@@ -3,25 +3,27 @@ from .forms import FileFieldForm, ImageInspect
 from .models import Image
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.conf import settings
 
 
 def map(request):
     # TODO: move this token to Django settings from an environment variable
     # found in the Mapbox account settings and getting started instructions
     # see https://www.mapbox.com/account/ under the "Access tokens" section
-    mapbox_access_token = 'pk.eyJ1IjoibHN0ZXBoZW5zMzQxIiwiYSI6ImNrOTIwYXgxaDAzZmUzdW1wbHk2a3V5bDkifQ.ZzlWZXnn9kpDBPAcbqaWRQ'
     images = Image.objects.all().exclude(yearField='').exclude(yearField='year')
     if images is not None:
         images0 = images[0]
+    api_key = settings.G_API_KEY
     return render(request, 'photoupload/map.html',
-                  { 'mapbox_access_token': mapbox_access_token, 'images': images, 'images0': images0 })
+                  { 'images': images, 'images0': images0, 'api_key': api_key})
 
 def explore(request):
     if request.method == 'GET':
         images = Image.objects.all().exclude(yearField='').exclude(yearField='year')
         if images is not None:
             images0 = images[0]
-        return render(request, 'photoupload/photo_upload.html', {'images': images, 'images0' : images0})
+        api_key = settings.G_API_KEY
+        return render(request, 'photoupload/photo_upload.html', {'images': images, 'images0' : images0, 'api_key': api_key})
 
 class FileFieldView(FormView):
     form_class = FileFieldForm
@@ -57,8 +59,9 @@ def inspect(request, key):
         key_int = int(key)
         key_int_corrected = key_int - 1
         image = images[key_int_corrected]
+        api_key = settings.G_API_KEY
         form = ImageInspect(initial={'caption': image.caption, 'memories': image.memories, 'tags':image.tags, 'location':image.location})
-        return render(request, 'photoupload/inspect.html', {'image': image, 'form': form})
+        return render(request, 'photoupload/inspect.html', {'image': image, 'form': form, 'api_key': api_key})
     if request.method == 'POST':
         images = Image.objects.all().exclude(yearField='').exclude(yearField='year')
         key_int = int(key)

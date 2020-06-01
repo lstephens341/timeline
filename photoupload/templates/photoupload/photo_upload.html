@@ -114,7 +114,7 @@
     <div style='float:left;width:60%;margin-left:35px;margin-top:35px'>
       <div>
         <input type='text' id='firstTagSearch' class='form-control' placeholder='Filter by tags' style='width:200px;float:left'>
-        <input id='locationSearch' style="float:left; margin-left:20px;width:40%"></input>
+        <input id='locationSearch' style="float:left; margin-left:20px;width:40%" placeholder='Filter by location'></input>
         <input type='submit' id='filterSubmit' class='btn btn-outline-dark' value='Apply Filters' style=' margin-left:10px;float:right'>
     </div>
   </div>
@@ -211,6 +211,6 @@ $(function () {
 });
 </script>
 <script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyD7bsO1SEsaah1CpreakpfWyd0PCwd0P-g&libraries=places&callback=init">
+src="https://maps.googleapis.com/maps/api/js?key={{api_key}}&libraries=places&callback=init">
 </script>
 {% endblock %}
